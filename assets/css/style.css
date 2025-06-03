@@ -1,0 +1,19 @@
+html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .pagina {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            color: rgba(0, 0, 0, 0.5);
+            padding: 20px 0;
+        }
