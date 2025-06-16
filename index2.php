@@ -44,17 +44,17 @@ if (!isset($_SESSION['usuario_id'])) {
                             <div class="container-fluid">
                                 <h1 class="display-5 fw-bold">Bem-vindo ao site Doação pra Vovó!</h1>
                                 <p class="col-md-10 fs-4">
-                                    Vamos doar? Clique no botão abaixo para ser direcionado à tela de doação.
+                                    Vamos doar? Clique no botão abaixo para agendar um horário com a instituição para doar.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row ms-5 me-5">
+                <div class="row mt-3 ms-5 me-5">
                     <div class="col-12 d-grid gap-2 text-center">
                         <button class="btn btn-lg btn-success"
-                            onclick="window.location.href='doacoes.php'">Realizar Doação</button>
+                            onclick="window.location.href='agendamento.php'">Agendar Doação</button>
                     </div>
                 </div>
 

@@ -1,58 +1,73 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: tela_de_login.html");
+require_once "conexao.php";
+
+if (!isset($_SESSION['usuario_id']) || ($_SESSION['usuario_tipo'] !== 'admin' && $_SESSION['usuario_tipo'] !== 'instituicao')) {
+    header("Location: tela_de_login.php");
     exit();
 }
+
+$doacoes = $conexao->query("SELECT * FROM doacoes ORDER BY id DESC");
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doações</title>
+    <title>Lista de Doações</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<body style="background-color:#f8f9fa;">
+    <div class="container py-4">
+        <h2 class="mb-4 text-center text-success">Doações Cadastradas</h2>
 
-<body style="background-color: #F0EFE7;">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg" style="background-color: #157247;" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a class="navbar-brand">Projeto</a>
-            <div class="collapse navbar-collapse">
-                <div class="navbar-nav">
-                    <a class="nav-link" href="index2.php">Home</a>
-                    <a class="nav-link active" href="doacoes.php">Doações</a>
-                    <a class="nav-link" href="logout.php">Sair</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Conteúdo principal -->
-    <div class="container mt-5">
-        <h2 class="fw-bold mb-4">Lista de Doações</h2>
         <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-success text-center">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-success">
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
+                        <th>Categoria</th>
                         <th>Observação</th>
                         <th>Quantidade</th>
-                        <th>Categoria</th>
+                        <th>Status</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php include "listar_doacoes.php"; ?>
+                    <?php if ($doacoes->num_rows > 0): ?>
+                        <?php while ($d = $doacoes->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= $d['id'] ?></td>
+                                <td><?= htmlspecialchars($d['categoria']) ?></td>
+                                <td><?= htmlspecialchars($d['observacao']) ?></td>
+                                <td><?= $d['quantidade'] ?></td>
+                                <td><?= ucfirst($d['status']) ?></td>
+                                <td>
+                                    <?php if ($d['status'] !== 'doada'): ?>
+                                        <form action="confirmar_doacao.php" method="POST" onsubmit="return confirm('Confirmar esta doação?');">
+                                            <input type="hidden" name="doacao_id" value="<?= $d['id'] ?>">
+                                            <button type="submit" class="btn btn-sm btn-success">Confirmar</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <span class="text-muted">Confirmada</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6">Nenhuma doação encontrada.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
+        <div class="text-center mt-4">
+            <a href="home_admin.php" class="btn btn-outline-secondary">Voltar ao Painel</a>
+        </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

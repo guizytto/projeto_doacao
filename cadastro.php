@@ -6,6 +6,7 @@ $nome = $_POST['nome'];
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 $telefone = $_POST['telefone'];
+$tipo = 'usuario';
 
 // Gerar hash seguro da senha
 $senhaHash = password_hash($senha, PASSWORD_DEFAULT);

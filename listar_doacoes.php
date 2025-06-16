@@ -1,23 +1,25 @@
 <?php
-require_once "conexao.php";
+include "conexao.php";
 
-// Consulta todas as doações
-$sql = "SELECT * FROM doacoes";
-$resultado = $conexao->query($sql);
+$sql = "SELECT * FROM doacoes WHERE status != 'doada' ORDER BY id DESC";
+$result = mysqli_query($conexao, $sql);
 
-if ($resultado->num_rows > 0) {
-    while ($row = $resultado->fetch_assoc()) {
-        echo "<tr class='text-center'>";
-        echo "<td>" . $row['id'] . "</td>";
-        echo "<td>" . htmlspecialchars($row['observacao']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['quantidade']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['categoria']) . "</td>";
-        echo "<td><a href='https://www.google.com/maps/dir/?api=1&destination=R.%20Araguaia%2C%20589%20-%20Jardim%20Agari%2C%20Londrina%20-%20PR%2C%2086025-720' target='_blank' class='btn btn-success'>Doar</a></td>";
-        echo "</tr>";
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<tr>";
+    echo "<td>{$row['id']}</td>";
+    echo "<td>" . htmlspecialchars($row['observacao']) . "</td>";
+    echo "<td>{$row['quantidade']}</td>";
+    echo "<td>" . htmlspecialchars($row['categoria']) . "</td>";
+    echo "<td class='text-center'>";
+
+    if (isset($exibir_botao_doar) && $exibir_botao_doar === true) {
+        $localEntrega = urlencode("R. Araguaia, 589 - Jardim Agari, Londrina - PR, 86025-720");
+        echo "<button class='btn btn-success btn-sm' onclick='confirmarDoacao({$row['id']}, \"{$localEntrega}\")'>Doar</button>";
+    } else {
+        echo "-";
     }
-} else {
-    echo "<tr><td colspan='5' class='text-center'>Nenhuma doação disponível.</td></tr>";
-}
 
-$conexao->close();
+    echo "</td>";
+    echo "</tr>";
+}
 ?>
